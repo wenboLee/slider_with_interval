@@ -1,3 +1,2 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - 实现带间隔的slider
 
-* TODO: Describe initial release.
