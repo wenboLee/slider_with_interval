@@ -26,7 +26,7 @@ import 'package:flutter/widgets.dart';
 // int _duelCommandment = 1;
 // void setState(VoidCallback fn) { }
 
-/// [Slider] uses this callback to paint the value indicator on the overlay.
+/// [IntervalSlider] uses this callback to paint the value indicator on the overlay.
 ///
 /// Since the value indicator is painted on the Overlay; this method paints the
 /// value indicator in a [RenderBox] that appears in the [Overlay].
@@ -123,7 +123,7 @@ enum _SliderType { material, adaptive }
 ///  * [Checkbox] and [Switch], for toggling a particular value on or off.
 ///  * <https://material.io/design/components/sliders.html>
 ///  * [MediaQuery], from which the text scale factor is obtained.
-class Slider extends StatefulWidget {
+class IntervalSlider extends StatefulWidget {
   /// Creates a Material Design slider.
   ///
   /// The slider itself does not maintain any state. Instead, when the state of
@@ -143,7 +143,7 @@ class Slider extends StatefulWidget {
   /// You can override some of the colors with the [activeColor] and
   /// [inactiveColor] properties, although more fine-grained control of the
   /// appearance is achieved using a [SliderThemeData].
-  const Slider({
+  const IntervalSlider({
     Key? key,
     required this.value,
     required this.onChanged,
@@ -168,7 +168,7 @@ class Slider extends StatefulWidget {
         assert(divisions == null || divisions > 0),
         super(key: key);
 
-  /// Creates an adaptive [Slider] based on the target platform, following
+  /// Creates an adaptive [IntervalSlider] based on the target platform, following
   /// Material design's
   /// [Cross-platform guidelines](https://material.io/design/platform-guidance/cross-platform-adaptation.html).
   ///
@@ -179,7 +179,7 @@ class Slider extends StatefulWidget {
   /// ignored: [label], [inactiveColor], [semanticFormatterCallback].
   ///
   /// The target platform is based on the current [Theme]: [ThemeData.platform].
-  const Slider.adaptive({
+  const IntervalSlider.adaptive({
     Key? key,
     required this.value,
     required this.onChanged,
@@ -350,7 +350,7 @@ class Slider extends StatefulWidget {
   ///
   /// If null, then the value indicator will not be displayed.
   ///
-  /// Ignored if this slider is created with [Slider.adaptive].
+  /// Ignored if this slider is created with [IntervalSlider.adaptive].
   ///
   /// See also:
   ///
@@ -381,7 +381,7 @@ class Slider extends StatefulWidget {
   /// Using a [SliderTheme] gives much more fine-grained control over the
   /// appearance of various components of the slider.
   ///
-  /// Ignored if this slider is created with [Slider.adaptive].
+  /// Ignored if this slider is created with [IntervalSlider.adaptive].
   final Color? inactiveColor;
 
   /// The cursor for a mouse pointer when it enters or is hovering over the
@@ -427,7 +427,7 @@ class Slider extends StatefulWidget {
   /// ```
   /// {@end-tool}
   ///
-  /// Ignored if this slider is created with [Slider.adaptive]
+  /// Ignored if this slider is created with [IntervalSlider.adaptive]
   final SemanticFormatterCallback? semanticFormatterCallback;
 
   /// {@macro flutter.widgets.Focus.focusNode}
@@ -439,7 +439,7 @@ class Slider extends StatefulWidget {
   final _SliderType _sliderType;
 
   @override
-  _SliderState createState() => _SliderState();
+  _IntervalSliderState createState() => _IntervalSliderState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -461,7 +461,7 @@ class Slider extends StatefulWidget {
   }
 }
 
-class _SliderState extends State<Slider> with TickerProviderStateMixin {
+class _IntervalSliderState extends State<IntervalSlider> with TickerProviderStateMixin {
   static const Duration enableAnimationDuration = Duration(milliseconds: 75);
   static const Duration valueIndicatorAnimationDuration = Duration(milliseconds: 100);
 
@@ -830,7 +830,7 @@ class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
   final ValueChanged<double>? onChangeStart;
   final ValueChanged<double>? onChangeEnd;
   final SemanticFormatterCallback? semanticFormatterCallback;
-  final _SliderState state;
+  final _IntervalSliderState state;
   final bool hasFocus;
   final bool hovering;
 
@@ -892,7 +892,7 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
     required SemanticFormatterCallback? semanticFormatterCallback,
     required this.onChangeStart,
     required this.onChangeEnd,
-    required _SliderState state,
+    required _IntervalSliderState state,
     required TextDirection textDirection,
     required bool hasFocus,
     required bool hovering,
@@ -961,7 +961,7 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
       ];
   double get _minPreferredTrackHeight => _sliderTheme.trackHeight!;
 
-  final _SliderState _state;
+  final _IntervalSliderState _state;
   late Animation<double> _overlayAnimation;
   late Animation<double> _valueIndicatorAnimation;
   late Animation<double> _enableAnimation;
@@ -1552,7 +1552,7 @@ class _ValueIndicatorRenderObjectWidget extends LeafRenderObjectWidget {
     required this.state,
   });
 
-  final _SliderState state;
+  final _IntervalSliderState state;
 
   @override
   _RenderValueIndicator createRenderObject(BuildContext context) {
@@ -1569,7 +1569,7 @@ class _ValueIndicatorRenderObjectWidget extends LeafRenderObjectWidget {
 
 class _RenderValueIndicator extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
   _RenderValueIndicator({
-    required _SliderState state,
+    required _IntervalSliderState state,
   }) : _state = state {
     _valueIndicatorAnimation = CurvedAnimation(
       parent: _state.valueIndicatorController,
@@ -1577,7 +1577,7 @@ class _RenderValueIndicator extends RenderBox with RelayoutWhenSystemFontsChange
     );
   }
   late Animation<double> _valueIndicatorAnimation;
-  _SliderState _state;
+  _IntervalSliderState _state;
 
   @override
   bool get sizedByParent => true;
