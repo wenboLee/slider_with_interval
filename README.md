@@ -2,7 +2,7 @@
 
 A new Flutter package project.
 
-![example](https://github.com/wenboLee/slider_with_interval/blob/master/exmaple.png)
+![example](https://github.com/wenboLee/slider_with_interval/blob/master/example.png?raw=true)
 
 ## Getting Started
 
