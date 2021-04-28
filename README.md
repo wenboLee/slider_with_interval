@@ -2,6 +2,8 @@
 
 A new Flutter package project.
 
+![example](https://github.com/wenboLee/slider_with_interval/blob/master/exmaple.png)
+
 ## Getting Started
 
 This project is a starting point for a Dart

@@ -151,6 +151,7 @@ class IntervalSlider extends StatefulWidget {
     this.onChangeEnd,
     this.min = 0.0,
     this.max = 1.0,
+    this.intervalPoints = const [],
     this.divisions,
     this.label,
     this.activeColor,
@@ -179,6 +180,9 @@ class IntervalSlider extends StatefulWidget {
   /// ignored: [label], [inactiveColor], [semanticFormatterCallback].
   ///
   /// The target platform is based on the current [Theme]: [ThemeData.platform].
+  ///
+  /// 实际上，没有实现ios，只实现了 material 版本
+  ///
   const IntervalSlider.adaptive({
     Key? key,
     required this.value,
@@ -187,6 +191,7 @@ class IntervalSlider extends StatefulWidget {
     this.onChangeEnd,
     this.min = 0.0,
     this.max = 1.0,
+    this.intervalPoints = const [],
     this.divisions,
     this.label,
     this.mouseCursor,
@@ -208,6 +213,9 @@ class IntervalSlider extends StatefulWidget {
   ///
   /// The slider's thumb is drawn at a position that corresponds to this value.
   final double value;
+
+  /// 插入的间隔
+  final List<double> intervalPoints;
 
   /// Called during a drag when the user is selecting a new value for the slider
   /// by dragging.
@@ -744,6 +752,9 @@ class _IntervalSliderState extends State<IntervalSlider> with TickerProviderStat
           child: _SliderRenderObjectWidget(
             key: _renderObjectKey,
             value: _unlerp(widget.value),
+            min: widget.min,
+            max: widget.max,
+            intervalPoints: widget.intervalPoints,
             divisions: widget.divisions,
             label: widget.label,
             sliderTheme: sliderTheme,
@@ -806,6 +817,9 @@ class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
   const _SliderRenderObjectWidget({
     Key? key,
     required this.value,
+    required this.min,
+    required this.max,
+    required this.intervalPoints,
     required this.divisions,
     required this.label,
     required this.sliderTheme,
@@ -821,6 +835,9 @@ class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
   }) : super(key: key);
 
   final double value;
+  final double min;
+  final double max;
+  final List<double> intervalPoints;
   final int? divisions;
   final String? label;
   final SliderThemeData sliderTheme;
@@ -838,7 +855,10 @@ class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
   _RenderSlider createRenderObject(BuildContext context) {
     return _RenderSlider(
       value: value,
+      min: min,
+      max: max,
       divisions: divisions,
+      intervalPoints: intervalPoints,
       label: label,
       sliderTheme: sliderTheme,
       textScaleFactor: textScaleFactor,
@@ -882,6 +902,9 @@ class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
 class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
   _RenderSlider({
     required double value,
+    required double min,
+    required double max,
+    required List<double> intervalPoints,
     required int? divisions,
     required String? label,
     required SliderThemeData sliderTheme,
@@ -904,6 +927,9 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
         _label = label,
         _value = value,
         _divisions = divisions,
+        min = min,
+        max = max,
+        _intervalPoints = intervalPoints,
         _sliderTheme = sliderTheme,
         _textScaleFactor = textScaleFactor,
         _screenSize = screenSize,
@@ -1006,6 +1032,17 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
     } else {
       _state.positionController.value = convertedValue;
     }
+    markNeedsSemanticsUpdate();
+  }
+
+  double min;
+  double max;
+
+  List<double> _intervalPoints;
+  List<double> get intervalPoints => _intervalPoints;
+  set intervalPoints(List<double> newIntervalPoints) {
+    if (newIntervalPoints == intervalPoints) return;
+    _intervalPoints = newIntervalPoints;
     markNeedsSemanticsUpdate();
   }
 
@@ -1407,7 +1444,8 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
       );
     }
 
-    if (isDiscrete) {
+    /// 如果存在 [ intervalPoints ] 不会绘制 [ divisions ] 避免冲突
+    if (isDiscrete && intervalPoints.isEmpty) {
       final double tickMarkWidth = _sliderTheme.tickMarkShape!
           .getPreferredSize(
             isEnabled: isInteractive,
@@ -1436,6 +1474,38 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
             isEnabled: isInteractive,
           );
         }
+      }
+    }
+
+    // 绘制间隔，参照 divisions
+    if (intervalPoints.isNotEmpty) {
+      final double padding = trackRect.height;
+      final double adjustedTrackWidth = trackRect.width - padding;
+
+      final double dy = trackRect.center.dy;
+
+      /// 标准
+      for (var i = 0; i < intervalPoints.length; ++i) {
+        var point = intervalPoints[i];
+
+        var b = point / max;
+
+        /// 自定义刻度
+
+        final double dx = trackRect.left + b * adjustedTrackWidth + padding / 2;
+
+        final Offset tickMarkOffset = Offset(dx, dy);
+
+        _sliderTheme.tickMarkShape!.paint(
+          context,
+          tickMarkOffset,
+          parentBox: this,
+          sliderTheme: _sliderTheme,
+          enableAnimation: _enableAnimation,
+          thumbCenter: thumbCenter,
+          isEnabled: isInteractive,
+          textDirection: textDirection,
+        );
       }
     }
 

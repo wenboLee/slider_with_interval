@@ -26,13 +26,16 @@ class SliderPageState extends State<SliderPage> {
       DeviceOrientation.landscapeLeft,
     ]);
 
-    setTimer();
+    // setTimer();
   }
 
   void setTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       progressValue += 0.5;
       print('$runtimeType  次数 tick ： ${timer.tick} \t $progressValue');
+      if (progressValue >= videoLength) {
+        progressValue = 0;
+      }
       setState(() {});
     });
   }
@@ -53,6 +56,7 @@ class SliderPageState extends State<SliderPage> {
       appBar: AppBar(
         title: Text('Slide Page'),
       ),
+      backgroundColor: Colors.pink[50],
       body: Container(
         child: Column(
           children: [
@@ -85,7 +89,14 @@ class SliderPageState extends State<SliderPage> {
         //选中区
         activeTrackColor: Color(0xffffc600),
         //非选中区
-        inactiveTrackColor: Color(0xfff2f2f7).withOpacity(0.48),
+        inactiveTrackColor: Colors.white.withOpacity(0.32),
+
+        trackShape: RoundedRectSliderTrackShape(),
+        tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 6),
+        activeTickMarkColor: Colors.white,
+        inactiveTickMarkColor: Color(0xffffc600),
+        trackHeight: 10,
+
         thumbColor: Color(0xffffc600),
         overlayShape: RoundSliderOverlayShape(
           //可继承SliderComponentShape自定义形状
@@ -96,15 +107,16 @@ class SliderPageState extends State<SliderPage> {
           disabledThumbRadius: 12, //禁用是滑块大小
           enabledThumbRadius: 12, //滑块大小
         ),
-        trackHeight: 10,
       ),
       child: IntervalSlider(
         value: progressValue,
+        // divisions: 10,
+        min: 0,
+        max: videoLength,
+        intervalPoints: spotList,
         onChangeStart: _onChangeStartSlide,
         onChangeEnd: _onChangeEndSlide,
         onChanged: _onChanged,
-        min: 0,
-        max: videoLength,
       ),
     );
   }
@@ -119,5 +131,8 @@ class SliderPageState extends State<SliderPage> {
 
   void _onChanged(double value) {
     print('$runtimeType value --> $value');
+    setState(() {
+      progressValue = value;
+    });
   }
 }
