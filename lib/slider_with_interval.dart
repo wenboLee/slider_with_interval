@@ -19,7 +19,6 @@ import 'package:flutter/src/material/material.dart';
 import 'package:flutter/src/material/material_state.dart';
 import 'package:flutter/src/material/slider_theme.dart';
 import 'package:flutter/src/material/theme.dart';
-import 'package:flutter/widgets.dart';
 
 // Examples can assume:
 // int _dollars = 0;
@@ -717,7 +716,7 @@ class _IntervalSliderState extends State<IntervalSlider> with TickerProviderStat
       valueIndicatorShape: valueIndicatorShape,
       showValueIndicator: sliderTheme.showValueIndicator ?? _defaultShowValueIndicator,
       valueIndicatorTextStyle: sliderTheme.valueIndicatorTextStyle ??
-          theme.textTheme.bodyText1!.copyWith(
+          theme.textTheme.bodyLarge!.copyWith(
             color: theme.colorScheme.onPrimary,
           ),
     );
@@ -919,7 +918,7 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
     required TextDirection textDirection,
     required bool hasFocus,
     required bool hovering,
-  })   : assert(value != null && value >= 0.0 && value <= 1.0),
+  })  : assert(value != null && value >= 0.0 && value <= 1.0),
         assert(state != null),
         assert(textDirection != null),
         _platform = platform,
