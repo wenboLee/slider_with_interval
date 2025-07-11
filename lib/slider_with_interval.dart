@@ -670,7 +670,7 @@ class _IntervalSliderState extends State<IntervalSlider> with TickerProviderStat
     const SliderTickMarkShape _defaultTickMarkShape = RoundSliderTickMarkShape();
     const SliderComponentShape _defaultOverlayShape = RoundSliderOverlayShape();
     const SliderComponentShape _defaultThumbShape = RoundSliderThumbShape();
-    const SliderComponentShape _defaultValueIndicatorShape = RectangularSliderValueIndicatorShape();
+    const SliderComponentShape _defaultValueIndicatorShape = RoundedRectSliderValueIndicatorShape();
     const ShowValueIndicator _defaultShowValueIndicator = ShowValueIndicator.onlyForDiscrete;
 
     // The value indicator's color is not the same as the thumb and active track
@@ -679,7 +679,7 @@ class _IntervalSliderState extends State<IntervalSlider> with TickerProviderStat
     // value indicator is assumed to be the same as the active color.
     final SliderComponentShape valueIndicatorShape = sliderTheme.valueIndicatorShape ?? _defaultValueIndicatorShape;
     final Color valueIndicatorColor;
-    if (valueIndicatorShape is RectangularSliderValueIndicatorShape) {
+    if (valueIndicatorShape is RoundedRectSliderValueIndicatorShape) {
       valueIndicatorColor = sliderTheme.valueIndicatorColor ??
           Color.alphaBlend(theme.colorScheme.onSurface.withOpacity(0.60), theme.colorScheme.surface.withOpacity(0.90));
     } else {
