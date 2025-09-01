@@ -1,3 +1,5 @@
+## [0.0.3] - migrate to flutter 3.35
+
 ## [0.0.3] - migrate to flutter 3.32
 
 ## [0.0.2] - migrate to flutter 3.22

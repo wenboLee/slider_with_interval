@@ -10,15 +10,10 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/services.dart';
-import 'package:flutter/src/material/constants.dart';
-import 'package:flutter/src/material/debug.dart';
-import 'package:flutter/src/material/material.dart';
-import 'package:flutter/src/material/material_state.dart';
-import 'package:flutter/src/material/slider_theme.dart';
-import 'package:flutter/src/material/theme.dart';
 
 // Examples can assume:
 // int _dollars = 0;
@@ -1188,6 +1183,9 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
       case ShowValueIndicator.always:
         return true;
       case ShowValueIndicator.never:
+        return false;
+      case ShowValueIndicator.onDrag:
+      case ShowValueIndicator.alwaysVisible:
         return false;
     }
   }
