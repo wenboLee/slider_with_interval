@@ -155,9 +155,6 @@ class IntervalSlider extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
   })  : _sliderType = _SliderType.material,
-        assert(value != null),
-        assert(min != null),
-        assert(max != null),
         assert(min <= max),
         assert(value >= min && value <= max),
         assert(divisions == null || divisions > 0),
@@ -1213,7 +1210,7 @@ class _RenderSlider extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
           text: label,
         )
         ..textDirection = textDirection
-        ..textScaleFactor = textScaleFactor
+        ..textScaler = TextScaler.linear(textScaleFactor)
         ..layout();
     } else {
       _labelPainter.text = null;
